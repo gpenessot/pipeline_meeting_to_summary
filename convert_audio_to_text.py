@@ -3,9 +3,6 @@ import torchaudio
 
 from transformers import AutoModelForCTC, Wav2Vec2ProcessorWithLM
 
-import os
-os.environ['HTTP_PROXY'] = 'vip-users.proxy.edf.fr:3131'
-os.environ['HTTPS_PROXY'] = 'vip-users.proxy.edf.fr:3131'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
