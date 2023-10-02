@@ -7,6 +7,14 @@ import glob
 import gc
 import sys
 
+# Create a logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler()
+logger.addHandler(handler)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = AutoModelForCTC.from_pretrained("bhuang/asr-wav2vec2-french").to(device)
@@ -25,10 +33,7 @@ def transcript_audio_to_text(model=model, processor=processor, audio_format='wav
     chunk_list = glob.glob(os.path.join(chunk_path, '*.{}'.format(audio_format)))
     chunk_list.sort()
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-
-    print('Audio chunks to convert: %s', chunk_list)
+    logger.info('Audio chunks to convert: %s', chunk_list)
 
     os.makedirs(output_path, exist_ok=True)
 

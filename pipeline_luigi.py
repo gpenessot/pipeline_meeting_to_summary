@@ -1,11 +1,14 @@
 import luigi
+import logging
+import subprocess
+logging.basicConfig(level=logging.INFO)
 
 class ExtractAudio(luigi.Task):
     def requires(self):
         return []
 
     def run(self):
-        import subprocess
+        logging.info("Running ExtractAudio task")
         subprocess.run(["python", "extract_audio.py"])
 
 class ConvertAudioToText(luigi.Task):
@@ -13,7 +16,7 @@ class ConvertAudioToText(luigi.Task):
         return [ExtractAudio()]
 
     def run(self):
-        import subprocess
+        logging.info("Running ConvertAudioToText task")
         subprocess.run(["python", "convert_audio_to_text.py"])
 
 class Punctuation(luigi.Task):
@@ -21,7 +24,7 @@ class Punctuation(luigi.Task):
         return [ConvertAudioToText()]
 
     def run(self):
-        import subprocess
+        logging.info("Running Punctuation task")
         subprocess.run(["python", "punctation.py"])
 
 class Summary(luigi.Task):
@@ -29,9 +32,9 @@ class Summary(luigi.Task):
         return [Punctuation()]
 
     def run(self):
-        import subprocess
+        logging.info("Running Summary task")
         subprocess.run(["python", "summary.py"])
 
 if __name__ == "__main__":
-    luigi.build([ExtractAudio(), ConvertAudioToText(), Punctuation(), Summary()], local_scheduler=True)
+    luigi.build([Summary()], local_scheduler=True)
     luigi.run()
