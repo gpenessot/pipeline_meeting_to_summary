@@ -12,7 +12,8 @@ The steps are :
 - Extract text from audio chunks
 - Add punctuation to extracted text from audio chunk
 - Summarize each text chunks with a relevant model
+- Merge summaries
 
 # TODO
-- Merging summaries
-- Data pipeline to automate the process
+- Data pipeline to automate the process with Luigi
+- Data pipeline to automate the process with Airflow
