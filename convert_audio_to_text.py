@@ -50,11 +50,9 @@ def transcript_audio_to_text(model=model, processor=processor, audio_format='wav
             input_dict = processor(waveform, sampling_rate=model_sample_rate, return_tensors="pt")
             logits = model(input_dict.input_values[0].to(device)).logits
 
-            #predicted_ids = torch.argmax(logits, dim=-1)
-            #predicted_sentence = processor.batch_decode(predicted_ids)[0]
             predicted_sentence = processor.batch_decode(logits.cpu().numpy()).text[0]
 
-            with open(os.path.join(output_path, "extracted_text_{'%04d'}.txt".format(i)), 'w') as f:
+            with open(os.path.join(output_path, "extracted_text_{:04d}.txt".format(i)), 'w') as f:
                 f.write(predicted_sentence)
 
             gc.collect()
