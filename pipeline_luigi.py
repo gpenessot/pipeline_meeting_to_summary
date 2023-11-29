@@ -1,40 +1,50 @@
 import luigi
-import logging
 import subprocess
-logging.basicConfig(level=logging.INFO)
+from extract_audio import split_on_silence
+from convert_audio_to_text import transcript_audio_to_text
 
 class ExtractAudio(luigi.Task):
-    def requires(self):
-        return []
+    def output(self):
+        return {
+            'wav': luigi.LocalTarget('./videoplayback.wav'),
+            'chunks': luigi.LocalTarget('./audio_chunks')
+        }
 
     def run(self):
-        logging.info("Running ExtractAudio task")
-        subprocess.run(["python", "extract_audio.py"])
+        split_on_silence()
 
-class ConvertAudioToText(luigi.Task):
+
+class TextExtraction(luigi.Task):
     def requires(self):
-        return [ExtractAudio()]
+        return ExtractAudio()
+
+    def output(self):
+        return luigi.LocalTarget('./text_extraction')
 
     def run(self):
-        logging.info("Running ConvertAudioToText task")
-        subprocess.run(["python", "convert_audio_to_text.py"])
+        transcript_audio_to_text()
+
 
 class Punctuation(luigi.Task):
     def requires(self):
-        return [ConvertAudioToText()]
+        return TextExtraction()
+
+    def output(self):
+        return luigi.LocalTarget('./text_punctuation')
 
     def run(self):
-        logging.info("Running Punctuation task")
-        subprocess.run(["python", "punctation.py"])
+        subprocess.run(["python", "punctuation.py"])
 
-class Summary(luigi.Task):
+
+class SummarizeText(luigi.Task):
     def requires(self):
-        return [Punctuation()]
+        return Punctuation()
+
+    def output(self):
+        return luigi.LocalTarget('./summary.txt')
 
     def run(self):
-        logging.info("Running Summary task")
-        subprocess.run(["python", "summary.py"])
+        subprocess.run(["python", "summarize_text.py"])
 
 if __name__ == "__main__":
-    luigi.build([Summary()], local_scheduler=True)
-    luigi.run()
+    luigi.build([SummarizeText()], local_scheduler=True)
