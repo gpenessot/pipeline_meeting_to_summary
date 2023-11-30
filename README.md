@@ -1,4 +1,4 @@
-# pipeline_meeting_to_summary // UNDER CONSTRUCTION
+# pipeline_meeting_to_summary
 
 The aim of this pipeline is to help you increase your productivity by focusing on coding while attending a (quite always) boring conference.
 The steps are :
@@ -13,7 +13,7 @@ The steps are :
 - Add punctuation to extracted text from audio chunk
 - Summarize each text chunks with a relevant model
 - Merge summaries
-
-# TODO
 - Data pipeline to automate the process with Luigi
+
+# TODO (OPTIONAL)
 - Data pipeline to automate the process with Airflow
